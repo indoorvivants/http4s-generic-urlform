@@ -1,0 +1,17 @@
+.metals
+.ammonite
+_site
+.vscode
+
+.bloop
+project/project
+
+project/target
+
+# example
+
+target
+
+project/metals.sbt
+
+.bsp
