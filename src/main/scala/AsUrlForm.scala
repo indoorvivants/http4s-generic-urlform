@@ -4,9 +4,10 @@ import cats.data.Chain
 import magnolia._
 import org.http4s.UrlForm
 
-trait AsUrlForm[T] {
-  import AsUrlForm.Path
-  protected def convert(value: T): Map[Path, String]
+import AsUrlForm.Path
+
+private[http4s] trait AsUrlForm[T] {
+  protected[http4s] def convert(value: T): Map[Path, String]
 
   def asUrlForm(value: T) = {
     UrlForm.apply {
@@ -19,22 +20,22 @@ trait AsUrlForm[T] {
   }
 }
 
-trait AsUrlFormOpsInstances {
+private[http4s] trait AsUrlFormOpsInstances {
+
   implicit final class AsUrlFormOps[T: AsUrlForm](value: T) {
     def asUrlForm: UrlForm = AsUrlForm[T].asUrlForm(value)
   }
 }
 
-object AsUrlForm extends AsUrlFormOpsInstances {
-
-  def apply[T](implicit asf: AsUrlForm[T]) = asf
-
-  type Path = List[String]
-
-  type Typeclass[T] = AsUrlForm[T]
+private[http4s] trait AsUrlFormBaseInstances {
+  private def primitive(s: String): Map[AsUrlForm.Path, String] = Map(Nil -> s)
 
   implicit val stringConvert: AsUrlForm[String] = new AsUrlForm[String] {
-    def convert(value: String) = Map(Nil -> value)
+    def convert(value: String) = primitive(value)
+  }
+
+  implicit val boolConvert: AsUrlForm[Boolean] = new AsUrlForm[Boolean] {
+    def convert(value: Boolean) = primitive(value.toString)
   }
 
   implicit def optConvert[T](implicit asf: AsUrlForm[T]): AsUrlForm[Option[T]] =
@@ -55,9 +56,31 @@ object AsUrlForm extends AsUrlFormOpsInstances {
       }
     }
 
-  implicit val intConvert: AsUrlForm[Int] = new AsUrlForm[Int] {
-    def convert(value: Int) = Map(Nil -> value.toString)
+  implicit val IntConvert: AsUrlForm[Int] = new AsUrlForm[Int] {
+    def convert(value: Int) = primitive(value.toString)
   }
+
+  implicit val DoubleConvert: AsUrlForm[Double] = new AsUrlForm[Double] {
+    def convert(value: Double) = primitive(value.toString)
+  }
+
+  implicit val FloatConvert: AsUrlForm[Float] = new AsUrlForm[Float] {
+    def convert(value: Float) = primitive(value.toString)
+  }
+
+}
+
+object AsUrlForm {
+  type Path = List[String]
+
+  def apply[T](implicit asf: AsUrlForm[T]) = asf
+}
+
+object generic_urlform
+    extends AsUrlFormOpsInstances
+    with AsUrlFormBaseInstances {
+
+  type Typeclass[T] = AsUrlForm[T]
 
   def combine[T](caseClass: CaseClass[AsUrlForm, T]): AsUrlForm[T] =
     new AsUrlForm[T] {

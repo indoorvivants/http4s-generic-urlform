@@ -1,8 +1,8 @@
-package com.indoorvivants.http4s
+package test
 
 object Main extends App {
 
-  import AsUrlForm._
+  import com.indoorvivants.http4s.generic_urlform._
 
   case class SomethingElse(test1: String, test2: String)
   case class Test(
@@ -13,7 +13,7 @@ object Main extends App {
   )
 
   println(Test("bla", 5, Some("what")).asUrlForm)
-  println(Test("bla", 5, None).asUrlForm)
+  println(Test("blaSSSS", 5, None).asUrlForm)
   println(
     Test(
       "bla",

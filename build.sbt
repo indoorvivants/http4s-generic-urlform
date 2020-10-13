@@ -1,17 +1,27 @@
-scalaVersion := "2.13.3"
-crossScalaVersions := Seq("2.13.3", "2.12.12")
-addCompilerPlugin(
-  "org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full
-)
+lazy val core = project
+  .in(file("."))
+  .settings(
+    scalaVersion := "2.13.3",
+    crossScalaVersions := Seq("2.13.3", "2.12.12"),
+    name := "http4s-generic-urlform",
+    libraryDependencies ++= Seq(
+      "org.http4s" %% "http4s-core" % "0.21.6",
+      "org.slf4j"   % "slf4j-nop"   % "2.0.0-alpha1"
+    ),
+    libraryDependencies += "com.propensive"      %% "magnolia"          % "0.16.0",
+    libraryDependencies += "org.scala-lang"       % "scala-reflect"     % scalaVersion.value % Provided,
+    libraryDependencies += "com.disneystreaming" %% "weaver-framework"  % "0.5.0"            % Test,
+    libraryDependencies += "com.disneystreaming" %% "weaver-scalacheck" % "0.5.0"            % Test,
+    testFrameworks += new TestFramework("weaver.framework.TestFramework")
+  )
 
-name := "http4s-generic-urlform"
-
-libraryDependencies ++= Seq(
-  "org.http4s" %% "http4s-core" % "0.21.6",
-  "org.slf4j"   % "slf4j-nop"   % "2.0.0-alpha1"
-)
-libraryDependencies += "com.propensive" %% "magnolia"      % "0.16.0"
-libraryDependencies += "org.scala-lang"  % "scala-reflect" % scalaVersion.value % Provided
+lazy val docs = project
+  .in(file("myproject-docs"))
+  .dependsOn(core)
+  .enablePlugins(MdocPlugin)
+  .settings(
+    scalaVersion := (core / scalaVersion).value
+  )
 
 inThisBuild(
   List(
@@ -51,7 +61,8 @@ val CICommands = Seq(
   "test",
   "scalafmtCheckAll",
   s"scalafix --check $scalafixRules",
-  "missinglinkCheck"
+  "missinglinkCheck",
+  "checkReadme"
 ).mkString(";")
 
 val PrepareCICommands = Seq(
@@ -60,8 +71,11 @@ val PrepareCICommands = Seq(
   "test:scalafmtAll",
   "compile:scalafmtAll",
   "scalafmtSbt",
-  "missinglinkCheck"
+  "missinglinkCheck",
+  "checkReadme"
 ).mkString(";")
+
+addCommandAlias("checkReadme", "docs/mdoc --in README.md")
 
 addCommandAlias("ci", CICommands)
 

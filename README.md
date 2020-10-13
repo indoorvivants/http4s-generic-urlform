@@ -2,7 +2,7 @@
 
 Say you have this data model:
 
-```scala
+```scala mdoc
 case class SomethingElse(test1: String, test2: String)
 case class Test(
     hello: String,
@@ -14,8 +14,8 @@ case class Test(
 
 And you can produce a http4s `UrlForm` object of those using this:
 
-```scala
-import com.indoorvivants.http4s.AsUrlForm._
+```scala mdoc
+import com.indoorvivants.http4s.generic_urlform._
 
 println(Test("bla", 5, Some("what")).asUrlForm)
 println(Test("bla", 5, None).asUrlForm)
