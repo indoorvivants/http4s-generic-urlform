@@ -30,9 +30,11 @@ inThisBuild(
     semanticdbVersion := scalafixSemanticdb.revision,
     scalafixScalaBinaryVersion := scalaBinaryVersion.value,
     organization := "com.indoorvivants",
+    organizationName := "Anton Sviridov",
     homepage := Some(
       url("https://github.com/indoorvivants/http4s-generic-urlform")
     ),
+    startYear := Some(2020),
     licenses := List(
       "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
     ),
@@ -62,7 +64,8 @@ val CICommands = Seq(
   "scalafmtCheckAll",
   s"scalafix --check $scalafixRules",
   "missinglinkCheck",
-  "checkReadme"
+  "checkReadme",
+  "headerCheck"
 ).mkString(";")
 
 val PrepareCICommands = Seq(
@@ -72,7 +75,8 @@ val PrepareCICommands = Seq(
   "compile:scalafmtAll",
   "scalafmtSbt",
   "missinglinkCheck",
-  "checkReadme"
+  "checkReadme",
+  "headerCreate"
 ).mkString(";")
 
 addCommandAlias("checkReadme", "docs/mdoc --in README.md")
