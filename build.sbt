@@ -12,7 +12,9 @@ lazy val core = project
     libraryDependencies += "org.scala-lang"       % "scala-reflect"     % scalaVersion.value % Provided,
     libraryDependencies += "com.disneystreaming" %% "weaver-framework"  % "0.5.0"            % Test,
     libraryDependencies += "com.disneystreaming" %% "weaver-scalacheck" % "0.5.0"            % Test,
-    testFrameworks += new TestFramework("weaver.framework.TestFramework")
+    testFrameworks += new TestFramework("weaver.framework.TestFramework"),
+
+    fork in Test := true
   )
 
 lazy val docs = project
