@@ -12,4 +12,4 @@ jobs:
       - uses: actions/checkout@v1
       - uses: olafurpg/setup-scala@v7
       - name: Test
-        run: sbt -Dsbt.ci=true ++${{ matrix.scala }} ci
+        run: sbt -Dsbt.color=always -Dsbt.supershell=false ++${{ matrix.scala }} ci
