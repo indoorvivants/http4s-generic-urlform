@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: keynmol/setup-scala@e63e2d9a3c6c13d7c37c5c1c1742e85736688c19
+      - uses: keynmol/setup-scala@v11
       - name: Test
         run: sbtn ++${{ matrix.scala }} ci
