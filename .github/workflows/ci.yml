@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: olafurpg/setup-scala@v7
+      - uses: keynmol/setup-scala@v11
       - name: Test
-        run: sbt -Dsbt.ci=true ++${{ matrix.scala }} ci
+        run: sbtn ++${{ matrix.scala }} ci
